@@ -1,0 +1,19 @@
+%% Question 1: Remove Noise
+input_img = imread('Q4_1.jpg'); % Replace with the actual path to Q4_1
+
+% Convert to grayscale only if the image is RGB
+if ndims(input_img) == 3
+    gray_img = rgb2gray(input_img);
+else
+    gray_img = im2gray(input_img); % Ensures it's treated as grayscale
+end
+
+% Apply median filtering to remove noise
+filtered_img = medfilt2(gray_img);
+
+% Display original and filtered images side-by-side
+imshowpair(gray_img, filtered_img, 'montage');
+title('Original Image vs. Denoised Image');
+
+% Save the output
+imwrite(filtered_img, 'Q1_output.jpg'); % Save the denoised image
