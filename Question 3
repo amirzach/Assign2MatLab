@@ -1,0 +1,13 @@
+%% Question 3: Extract Rice Objects
+input_img = imread('Q4_3.tif'); 
+
+% Binarize and clean up small noise
+bw_img = imbinarize(input_img, 'adaptive'); 
+clean_rice = bwareaopen(bw_img, 50); % Remove objects smaller than 50 pixels
+
+% Display original and extracted rice objects side-by-side
+imshowpair(input_img, clean_rice, 'montage');
+title('Original Image vs. Rice Objects Extracted');
+
+% Save output
+imwrite(clean_rice, 'Q3_output.jpg'); % Save rice extraction
