@@ -1,0 +1,51 @@
+% Question 4: Separate Small and Large Blobs
+% Read the input image
+img = imread('Q4_4.tif'); 
+
+% Check the dimensions of the image
+[rows, columns, numberOfColorChannels] = size(img);
+
+% Convert to grayscale if the image is RGB
+if size(img, 3) == 3
+    img = rgb2gray(img);
+end
+
+% Create a binary image by inverting the binarization
+binaryImage = ~imbinarize(img); % Invert the binary image for correct segmentation
+
+% Remove small objects from the binary image
+binaryImage = bwareaopen(binaryImage, 200); % Remove objects smaller than 200 pixels
+
+% Clear objects connected to the border of the image
+binaryImage = imclearborder(binaryImage);
+
+% Label connected components
+[labeledImage, numBlobs] = bwlabel(binaryImage);
+
+% Measure the area of each blob
+blobStats = regionprops(labeledImage, 'Area');
+allAreas = [blobStats.Area];
+
+% Define the size threshold for small and large blobs
+areaThreshold = 2500; % Adjust based on the image
+
+% Find small and large blobs based on their area
+smallIndexes = find(allAreas < areaThreshold);
+largeIndexes = find(allAreas >= areaThreshold);
+
+% Create masks for small and large blobs
+smallBlobs = ismember(labeledImage, smallIndexes);
+largeBlobs = ismember(labeledImage, largeIndexes);
+
+% Display the results
+figure;
+
+subplot(2, 2, 1); imshow(smallBlobs, []); % Small blobs
+title('Small Blobs');
+
+subplot(2, 2, 2); imshow(largeBlobs, []); % Large blobs
+title('Large Blobs');
+
+% Save the output images
+imwrite(smallBlobs, 'Q4_small_blobs_output.jpg'); % Save small blobs
+imwrite(largeBlobs, 'Q4_large_blobs_output.jpg'); % Save large blobs
